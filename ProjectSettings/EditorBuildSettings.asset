@@ -17,4 +17,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Kdevaulo/Scenes/Settings.unity
     guid: 4b0896f4b44a75648b0fa703b9f8a7d5
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 7b6842e171b555e43a8f15cc2824b40a, type: 2}
