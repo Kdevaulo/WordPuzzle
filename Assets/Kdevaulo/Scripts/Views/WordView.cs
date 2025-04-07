@@ -1,4 +1,7 @@
-﻿using Kdevaulo.WordPuzzle.Data;
+﻿using System.Collections.Generic;
+using System.Linq;
+
+using Kdevaulo.WordPuzzle.Data;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -8,11 +11,21 @@ namespace Kdevaulo.WordPuzzle.Views
     [AddComponentMenu(nameof(WordView) + " in " + nameof(Views))]
     public class WordView : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
+        [Header("Values")]
+        [SerializeField] private Vector2 _anchorMin = Vector2.one / 2f;
+        [SerializeField] private Vector2 _anchorMax = Vector2.one / 2f;
+        [SerializeField] private Vector2 _pivot = Vector2.one / 2f;
+
+        [Header("References")]
         [SerializeField] private CellView[] _cells;
 
-        private CellColors _cellColors;
+        [SerializeField] private RectTransform _transform;
 
-        private bool[] _cellsOccupancy;
+        private readonly Dictionary<CellView, bool> _cellsOccupancy = new Dictionary<CellView, bool>();
+
+        private CellView[] _targetCells;
+
+        private CellColors _cellColors;
 
         private bool _isPointerOver;
 
@@ -30,25 +43,32 @@ namespace Kdevaulo.WordPuzzle.Views
 
         private void Update()
         {
+            UpdateCellsColors();
+
             if (_isPointerOver && ClusterView.CurrentDragged != null)
             {
-                TryHighlightCells(ClusterView.CurrentDragged.ClusterLength);
-            }
-            else
-            {
-                UpdateCellsColors();
+                var pos = ClusterView.CurrentDragged.transform.position;
+
+                var closestSet = _cells
+                    .OrderBy(x => Vector2.Distance(x.transform.position, pos))
+                    .Take(ClusterView.CurrentDragged.ClusterLength)
+                    .ToHashSet();
+
+                _targetCells = _cells
+                    .Where(x => closestSet.Contains(x))
+                    .ToArray();
+
+                TryHighlightCells(_targetCells);
             }
         }
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            Debug.Log("PointerEnter");
             _isPointerOver = true;
         }
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            Debug.Log("PointerExit");
             _isPointerOver = false;
             UpdateCellsColors();
         }
@@ -58,74 +78,73 @@ namespace Kdevaulo.WordPuzzle.Views
             var cluster = ClusterView.CurrentDragged;
             if (cluster == null) return;
 
-            var index = FindFreeSegment(cluster.ClusterLength);
-
-            if (index >= 0)
+            if (_targetCells != null)
             {
-                // todo: Выставляем позицию кластера так, чтобы буквы встали в нужные ячейки
+                var count = _targetCells.Length;
+
+                var position = CalculateTargetPosition(count);
+
+                cluster.SetParent(_transform);
+                cluster.SetAnchorPreset(_anchorMin, _anchorMax, _pivot);
+                cluster.SetPosition(position);
             }
 
             UpdateCellsColors();
         }
 
-        public void Initialize(CellColors colors)
+        private Vector2 CalculateTargetPosition(int count)
         {
-            _cellColors = colors;
-            _cellsOccupancy = new bool[_cells.Length];
-        }
+            Vector2 position;
 
-        private void TryHighlightCells(int neededCount)
-        {
-            var index = FindFreeSegment(neededCount);
-
-            if (index >= 0)
+            if (count % 2 == 0)
             {
-                for (int i = index; i < index + neededCount; i++)
-                {
-                    _cells[i].SetColor(_cellColors.HighlightColor);
-                }
+                var upBorderIndex = count / 2;
+                var downBorderIndex = upBorderIndex - 1;
+                var firstCell = _targetCells[downBorderIndex];
+                var secondCell = _targetCells[upBorderIndex];
+
+                position = (firstCell.GetPosition() + secondCell.GetPosition()) / 2f;
             }
             else
             {
-                UpdateCellsColors();
+                var flooredHalf = Mathf.FloorToInt(count / 2f);
+                position = _targetCells[flooredHalf].GetPosition();
+            }
+
+            return position;
+        }
+
+        public void Initialize(CellColors colors)
+        {
+            _cellColors = colors;
+
+            _cellsOccupancy.Clear();
+
+            foreach (var cell in _cells)
+            {
+                _cellsOccupancy[cell] = false;
             }
         }
 
-        private int FindFreeSegment(int neededCount)
+        private void TryHighlightCells(CellView[] targetCells)
         {
-            var consecutive = 0;
-            var startIndex = 0;
-
-            var cellsCount = _cellsOccupancy.Length;
-
-            for (int i = 0; i < cellsCount; i++)
+            if (targetCells.Any(cell => _cellsOccupancy[cell]))
             {
-                if (!_cellsOccupancy[i])
-                {
-                    consecutive++;
-                }
-                else
-                {
-                    consecutive = 0;
-                    startIndex = i + 1;
-                }
-
-                if (consecutive == neededCount)
-                {
-                    return startIndex;
-                }
+                _targetCells = null;
+                return;
             }
 
-            return -1;
+            foreach (var cell in targetCells)
+            {
+                cell.SetColor(_cellColors.HighlightColor);
+            }
         }
 
         private void UpdateCellsColors()
         {
-            var cellsCount = _cellsOccupancy.Length;
-
-            for (int i = 0; i < cellsCount; i++)
+            foreach (var cell in _cellsOccupancy)
             {
-                _cells[i].SetColor(_cellsOccupancy[i]
+                cell.Key.SetColor(cell.Value
                     ? _cellColors.OccupiedColor
                     : _cellColors.NormalColor);
             }

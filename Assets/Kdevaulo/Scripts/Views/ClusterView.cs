@@ -23,25 +23,21 @@ namespace Kdevaulo.WordPuzzle.Views
         private Canvas _draggableCanvas;
 
         private Transform _startParent;
-        private Vector2 _startPosition;
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
             CurrentDragged = this;
 
-            _startPosition = _transform.anchoredPosition;
-            _startParent = transform.parent;
-
             _canvasGroup.blocksRaycasts = false;
 
-            transform.SetParent(_draggableCanvas.transform, worldPositionStays: true);
+            SetParent(_draggableCanvas.transform, true);
 
             transform.SetAsLastSibling();
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            _transform.anchoredPosition += eventData.delta / _draggableCanvas.scaleFactor;
+            SetPosition(_transform.anchoredPosition + eventData.delta / _draggableCanvas.scaleFactor);
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
@@ -49,16 +45,16 @@ namespace Kdevaulo.WordPuzzle.Views
             CurrentDragged = null;
             _canvasGroup.blocksRaycasts = true;
 
-            if (transform.parent == _draggableCanvas.transform)
+            if (_draggableCanvas.transform == _transform.parent)
             {
-                transform.SetParent(_startParent, worldPositionStays: false);
-                _transform.anchoredPosition = _startPosition;
+                SetParent(_startParent);
             }
         }
 
         public void Initialize(Canvas draggableCanvas)
         {
             _draggableCanvas = draggableCanvas;
+            _startParent = transform.parent;
         }
 
         public void SetClusterText(string cluster)
@@ -67,10 +63,27 @@ namespace Kdevaulo.WordPuzzle.Views
 
             Assert.IsTrue(length == _letterContainers.Length);
 
-            for (int i = 0; i < length; i++)
+            for (var i = 0; i < length; i++)
             {
                 _letterContainers[i].text = cluster[i].ToString();
             }
+        }
+
+        public void SetPosition(Vector2 targetPosition)
+        {
+            _transform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0);
+        }
+
+        public void SetParent(Transform parent, bool positionStays = false)
+        {
+            _transform.SetParent(parent, positionStays);
+        }
+
+        public void SetAnchorPreset(Vector2 min, Vector2 max, Vector2 pivot)
+        {
+            _transform.anchorMin = min;
+            _transform.anchorMax = max;
+            _transform.pivot = pivot;
         }
     }
 }
