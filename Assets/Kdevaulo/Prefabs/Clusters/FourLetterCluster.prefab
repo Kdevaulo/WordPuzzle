@@ -328,6 +328,10 @@ PrefabInstance:
       propertyPath: m_text
       value: WWWW
       objectReference: {fileID: 0}
+    - target: {fileID: 8349746618200235687, guid: b069f9acc8b654e46aa915a8d10b8a8b, type: 3}
+      propertyPath: m_Name
+      value: Outline
+      objectReference: {fileID: 0}
     - target: {fileID: 8356758155173740856, guid: b069f9acc8b654e46aa915a8d10b8a8b, type: 3}
       propertyPath: m_Name
       value: FourLetterCluster

@@ -6,5 +6,6 @@ namespace Kdevaulo.WordPuzzle.Views
     public class MainView : MonoBehaviour
     {
         [field: SerializeField] public Transform ClustersParent { get; private set; }
+        [field: SerializeField] public Canvas DragCanvas { get; private set; }
     }
 }

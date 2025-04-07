@@ -12,6 +12,8 @@ namespace Kdevaulo.WordPuzzle
     public class ClusterSpawner
     {
         private readonly ClusterView[] _clusterViews;
+
+        private readonly MainView _mainView;
         private readonly Transform _parent;
 
         private List<ClusterView> _createdViews;
@@ -19,6 +21,7 @@ namespace Kdevaulo.WordPuzzle
         public ClusterSpawner(ClusterView[] clusterViews, MainView mainView)
         {
             _clusterViews = clusterViews;
+            _mainView = mainView;
             _parent = mainView.ClustersParent;
             _createdViews = new List<ClusterView>();
         }
@@ -45,6 +48,7 @@ namespace Kdevaulo.WordPuzzle
             _createdViews.Add(createdItem);
 
             createdItem.SetClusterText(text);
+            createdItem.Initialize(_mainView.DragCanvas);
         }
     }
 }

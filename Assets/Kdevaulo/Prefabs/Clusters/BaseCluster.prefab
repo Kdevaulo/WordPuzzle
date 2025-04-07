@@ -353,6 +353,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1288782016315101209}
   - component: {fileID: 5191051810044847452}
+  - component: {fileID: 2465821372553553637}
   m_Layer: 0
   m_Name: BaseCluster
   m_TagString: Untagged
@@ -397,3 +398,17 @@ MonoBehaviour:
   _letterContainers:
   - {fileID: 1740356421722069244}
   - {fileID: 2961198248757636152}
+  _transform: {fileID: 1288782016315101209}
+  _canvasGroup: {fileID: 2465821372553553637}
+--- !u!225 &2465821372553553637
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8356758155173740856}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
