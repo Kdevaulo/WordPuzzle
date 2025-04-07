@@ -1,4 +1,4 @@
-﻿namespace Kdevaulo.WordPuzzle.Data
+﻿namespace Kdevaulo.WordPuzzle.Core.Data
 {
     public class Level
     {

@@ -3,52 +3,31 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+using Zenject;
+
 using Assert = UnityEngine.Assertions.Assert;
 
-namespace Kdevaulo.WordPuzzle.Views
+namespace Kdevaulo.WordPuzzle.Presentation.Views
 {
     [RequireComponent(typeof(CanvasGroup))]
     [AddComponentMenu(nameof(ClusterView) + " in " + nameof(Views))]
     public class ClusterView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        public static ClusterView CurrentDragged { get; private set; }
-
         public int ClusterLength => _letterContainers.Length;
 
         [SerializeField] private TextMeshProUGUI[] _letterContainers;
-
         [SerializeField] private RectTransform _transform;
         [SerializeField] private CanvasGroup _canvasGroup;
 
         private Canvas _draggableCanvas;
-
         private Transform _startParent;
 
-        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+        private DragHandler _dragHandler;
+
+        [Inject]
+        public void Construct(DragHandler dragHandler)
         {
-            CurrentDragged = this;
-
-            _canvasGroup.blocksRaycasts = false;
-
-            SetParent(_draggableCanvas.transform, true);
-
-            transform.SetAsLastSibling();
-        }
-
-        void IDragHandler.OnDrag(PointerEventData eventData)
-        {
-            SetPosition(_transform.anchoredPosition + eventData.delta / _draggableCanvas.scaleFactor);
-        }
-
-        void IEndDragHandler.OnEndDrag(PointerEventData eventData)
-        {
-            CurrentDragged = null;
-            _canvasGroup.blocksRaycasts = true;
-
-            if (_draggableCanvas.transform == _transform.parent)
-            {
-                SetParent(_startParent);
-            }
+            _dragHandler = dragHandler;
         }
 
         public void Initialize(Canvas draggableCanvas)
@@ -59,11 +38,9 @@ namespace Kdevaulo.WordPuzzle.Views
 
         public void SetClusterText(string cluster)
         {
-            var length = cluster.Length;
+            Assert.IsTrue(cluster.Length == _letterContainers.Length);
 
-            Assert.IsTrue(length == _letterContainers.Length);
-
-            for (var i = 0; i < length; i++)
+            for (var i = 0; i < cluster.Length; i++)
             {
                 _letterContainers[i].text = cluster[i].ToString();
             }
@@ -71,7 +48,7 @@ namespace Kdevaulo.WordPuzzle.Views
 
         public void SetPosition(Vector2 targetPosition)
         {
-            _transform.anchoredPosition = new Vector3(targetPosition.x, targetPosition.y, 0);
+            _transform.anchoredPosition = targetPosition;
         }
 
         public void SetParent(Transform parent, bool positionStays = false)
@@ -84,6 +61,29 @@ namespace Kdevaulo.WordPuzzle.Views
             _transform.anchorMin = min;
             _transform.anchorMax = max;
             _transform.pivot = pivot;
+        }
+
+        void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+        {
+            _dragHandler.BeginDrag(this);
+
+            _canvasGroup.blocksRaycasts = false;
+            SetParent(_draggableCanvas.transform, true);
+            transform.SetAsLastSibling();
+        }
+
+        void IDragHandler.OnDrag(PointerEventData eventData)
+        {
+            SetPosition(_transform.anchoredPosition + eventData.delta / _draggableCanvas.scaleFactor);
+        }
+
+        void IEndDragHandler.OnEndDrag(PointerEventData eventData)
+        {
+            _dragHandler.EndDrag(this);
+
+            _canvasGroup.blocksRaycasts = true;
+            if (_draggableCanvas.transform == _transform.parent)
+                SetParent(_startParent);
         }
     }
 }

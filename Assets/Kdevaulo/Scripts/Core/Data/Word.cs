@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Kdevaulo.WordPuzzle.Data
+namespace Kdevaulo.WordPuzzle.Core.Data
 {
     [Serializable]
     public class Word

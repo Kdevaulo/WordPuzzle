@@ -2,22 +2,18 @@
 
 using Cysharp.Threading.Tasks;
 
-using Kdevaulo.WordPuzzle.Data;
-
-using UnityEngine.Assertions;
-
 using Zenject;
 
-namespace Kdevaulo.WordPuzzle
+namespace Kdevaulo.WordPuzzle.Core
 {
     public class GameController : IInitializable
     {
-        private readonly LevelLoader _levelLoader;
-        private readonly ClusterSpawner _clusterSpawner;
+        private readonly AbstractLevelLoader _levelLoader;
+        private readonly IClusterSpawner _clusterSpawner;
 
         private CancellationTokenSource _cts;
 
-        public GameController(LevelLoader levelLoader, ClusterSpawner clusterSpawner)
+        public GameController(AbstractLevelLoader levelLoader, IClusterSpawner clusterSpawner)
         {
             _levelLoader = levelLoader;
             _clusterSpawner = clusterSpawner;
@@ -35,11 +31,8 @@ namespace Kdevaulo.WordPuzzle
 
             var loadedLevel = _levelLoader.GetLoadedLevel();
 
-            if (loadedLevel != null)
+            if (loadedLevel?.Words != null && loadedLevel.Words.Length != 0)
             {
-                Assert.IsFalse(loadedLevel.Words == null);
-                Assert.IsFalse(loadedLevel.Words.Length == 0);
-
                 _clusterSpawner.CreateClusters(loadedLevel);
             }
         }

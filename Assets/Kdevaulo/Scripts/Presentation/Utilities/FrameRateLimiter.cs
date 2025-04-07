@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kdevaulo.WordPuzzle.Utilities
+namespace Kdevaulo.WordPuzzle.Presentation.Utilities
 {
     [DisallowMultipleComponent]
     [AddComponentMenu(nameof(FrameRateLimiter) + " in " + nameof(Utilities))]

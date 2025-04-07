@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Kdevaulo.WordPuzzle.Utilities
+namespace Kdevaulo.WordPuzzle.presentation.Utilities
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(RectTransform))]

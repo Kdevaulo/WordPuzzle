@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace Kdevaulo.WordPuzzle.Data
+namespace Kdevaulo.WordPuzzle.Presentation.Data
 {
     [Serializable]
     public struct CellColors

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Kdevaulo.WordPuzzle.Views
+namespace Kdevaulo.WordPuzzle.Presentation.Views
 {
     [AddComponentMenu(nameof(MainView) + " in " + nameof(Views))]
     public class MainView : MonoBehaviour

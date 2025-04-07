@@ -56,6 +56,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4bc1b1321124fabaed101250bfc48cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _anchorMin: {x: 0.5, y: 0.5}
+  _anchorMax: {x: 0.5, y: 0.5}
+  _pivot: {x: 0.5, y: 0.5}
   _cells:
   - {fileID: 5234878326610747513}
   - {fileID: 3038069166878899478}

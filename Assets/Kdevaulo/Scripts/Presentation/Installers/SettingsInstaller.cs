@@ -2,7 +2,7 @@
 
 using Zenject;
 
-namespace Kdevaulo.WordPuzzle.Installers
+namespace Kdevaulo.WordPuzzle.Presentation.Installers
 {
     [AddComponentMenu(nameof(SettingsInstaller) + " in " + nameof(Installers))]
     public class SettingsInstaller : MonoInstaller

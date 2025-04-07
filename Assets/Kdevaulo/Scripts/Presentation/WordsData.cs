@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Kdevaulo.WordPuzzle.Presentation.Data;
+
+using UnityEngine;
 
 namespace Kdevaulo.WordPuzzle.Data
 {

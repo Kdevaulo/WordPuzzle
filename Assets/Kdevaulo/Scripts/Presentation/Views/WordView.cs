@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Kdevaulo.WordPuzzle.Data;
-
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Kdevaulo.WordPuzzle.Views
+using Zenject;
+
+using CellColors = Kdevaulo.WordPuzzle.Presentation.Data.CellColors;
+
+namespace Kdevaulo.WordPuzzle.Presentation.Views
 {
     [AddComponentMenu(nameof(WordView) + " in " + nameof(Views))]
     public class WordView : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
@@ -18,40 +20,48 @@ namespace Kdevaulo.WordPuzzle.Views
 
         [Header("References")]
         [SerializeField] private CellView[] _cells;
-
         [SerializeField] private RectTransform _transform;
 
         private readonly Dictionary<CellView, bool> _cellsOccupancy = new Dictionary<CellView, bool>();
 
         private CellView[] _targetCells;
 
+        private DragHandler _dragHandler;
         private CellColors _cellColors;
 
         private bool _isPointerOver;
 
-        private void Awake()
+        [Inject]
+        public void Construct(DragHandler dragHandler)
         {
-            var colors = new CellColors()
+            _dragHandler = dragHandler;
+
+            _cellColors = new CellColors
             {
                 HighlightColor = Color.green,
                 OccupiedColor = Color.yellow,
                 NormalColor = Color.white
             };
 
-            Initialize(colors);
+            _cellsOccupancy.Clear();
+
+            foreach (var cell in _cells)
+            {
+                _cellsOccupancy[cell] = false;
+            }
         }
 
         private void Update()
         {
             UpdateCellsColors();
 
-            if (_isPointerOver && ClusterView.CurrentDragged != null)
+            if (_isPointerOver && _dragHandler.CurrentDraggingView != null)
             {
-                var pos = ClusterView.CurrentDragged.transform.position;
+                var pos = _dragHandler.CurrentDraggingView.transform.position;
 
                 var closestSet = _cells
                     .OrderBy(x => Vector2.Distance(x.transform.position, pos))
-                    .Take(ClusterView.CurrentDragged.ClusterLength)
+                    .Take(_dragHandler.CurrentDraggingView.ClusterLength)
                     .ToHashSet();
 
                 _targetCells = _cells
@@ -70,13 +80,13 @@ namespace Kdevaulo.WordPuzzle.Views
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
             _isPointerOver = false;
-            UpdateCellsColors();
         }
 
         void IDropHandler.OnDrop(PointerEventData eventData)
         {
-            var cluster = ClusterView.CurrentDragged;
-            if (cluster == null) return;
+            var cluster = _dragHandler.CurrentDraggingView;
+            if (!_isPointerOver || cluster == null)
+                return;
 
             if (_targetCells != null)
             {
@@ -112,18 +122,6 @@ namespace Kdevaulo.WordPuzzle.Views
             }
 
             return position;
-        }
-
-        public void Initialize(CellColors colors)
-        {
-            _cellColors = colors;
-
-            _cellsOccupancy.Clear();
-
-            foreach (var cell in _cells)
-            {
-                _cellsOccupancy[cell] = false;
-            }
         }
 
         private void TryHighlightCells(CellView[] targetCells)
