@@ -11,6 +11,8 @@ namespace Kdevaulo.WordPuzzle.Views
     [AddComponentMenu(nameof(ClusterView) + " in " + nameof(Views))]
     public class ClusterView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
+        public static ClusterView CurrentDragged { get; private set; }
+
         public int ClusterLength => _letterContainers.Length;
 
         [SerializeField] private TextMeshProUGUI[] _letterContainers;
@@ -25,6 +27,8 @@ namespace Kdevaulo.WordPuzzle.Views
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
+            CurrentDragged = this;
+
             _startPosition = _transform.anchoredPosition;
             _startParent = transform.parent;
 
@@ -42,6 +46,7 @@ namespace Kdevaulo.WordPuzzle.Views
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
+            CurrentDragged = null;
             _canvasGroup.blocksRaycasts = true;
 
             if (transform.parent == _draggableCanvas.transform)

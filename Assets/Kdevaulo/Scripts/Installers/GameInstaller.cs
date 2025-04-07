@@ -11,6 +11,7 @@ namespace Kdevaulo.WordPuzzle.Installers
     public class GameInstaller : MonoInstaller
     {
         [SerializeField] private ClustersData _clustersData;
+        [SerializeField] private WordsData _wordsData;
 
         public override void InstallBindings()
         {
