@@ -13,7 +13,7 @@ namespace Kdevaulo.WordPuzzle.View
 {
     public class ClusterSpawner : IClusterSpawner
     {
-        private readonly ClusterView[] _clusterViews;
+        private readonly ClusterView[] _clusterViewPrefabs;
 
         private readonly DiContainer _container;
         private readonly MainView _mainView;
@@ -21,9 +21,9 @@ namespace Kdevaulo.WordPuzzle.View
 
         private List<ClusterView> _createdViews;
 
-        public ClusterSpawner(ClusterView[] clusterViews, DiContainer container, MainView mainView)
+        public ClusterSpawner(ClusterView[] clusterViewPrefabs, DiContainer container, MainView mainView)
         {
-            _clusterViews = clusterViews;
+            _clusterViewPrefabs = clusterViewPrefabs;
             _mainView = mainView;
             _container = container;
             _parent = mainView.ClustersParent;
@@ -44,7 +44,7 @@ namespace Kdevaulo.WordPuzzle.View
         private void CreateCluster(string text)
         {
             var length = text.Length;
-            var targetCluster = _clusterViews.FirstOrDefault(x => x.ClusterLength == length);
+            var targetCluster = _clusterViewPrefabs.FirstOrDefault(x => x.ClusterLength == length);
 
             Assert.IsNotNull(targetCluster, $"There is no cluster view with length == {length}");
 

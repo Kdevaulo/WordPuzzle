@@ -1,6 +1,8 @@
-﻿namespace Kdevaulo.WordPuzzle.Model
+﻿using Kdevaulo.WordPuzzle.Core;
+
+namespace Kdevaulo.WordPuzzle.Model
 {
-    public class ClusterModel
+    public class ClusterModel : IClusterModel
     {
         public string Text;
         public string Length;

@@ -1,4 +1,7 @@
-﻿using TMPro;
+﻿using Kdevaulo.WordPuzzle.Core;
+using Kdevaulo.WordPuzzle.Core.Data;
+
+using TMPro;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -6,12 +9,14 @@ using UnityEngine.EventSystems;
 using Zenject;
 
 using Assert = UnityEngine.Assertions.Assert;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Kdevaulo.WordPuzzle.View
 {
     [RequireComponent(typeof(CanvasGroup))]
     [AddComponentMenu(nameof(ClusterView) + " in " + nameof(View))]
-    public class ClusterView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class ClusterView : MonoBehaviour, IClusterView, IDraggingItem, IBeginDragHandler, IDragHandler,
+        IEndDragHandler
     {
         public int ClusterLength => _letterContainers.Length;
 
@@ -19,14 +24,15 @@ namespace Kdevaulo.WordPuzzle.View
         [SerializeField] private RectTransform _transform;
         [SerializeField] private CanvasGroup _canvasGroup;
 
-        private DragHandler _dragHandler;
+        private IClusterPresenter _clusterPresenter;
+
         private Canvas _draggableCanvas;
         private Transform _startParent;
 
         [Inject]
-        public void Construct(DragHandler dragHandler)
+        public void Construct(IClusterPresenter clusterPresenter)
         {
-            _dragHandler = dragHandler;
+            _clusterPresenter = clusterPresenter;
         }
 
         public void Initialize(Canvas draggableCanvas)
@@ -45,31 +51,19 @@ namespace Kdevaulo.WordPuzzle.View
             }
         }
 
-        public void SetPosition(Vector2 targetPosition)
+        void IClusterView.SetAnchoredPosition(Vector2 targetPosition)
         {
-            _transform.position = targetPosition;
+            _transform.anchoredPosition = targetPosition.ToUnity();
         }
 
-        public void SetAnchoredPosition(Vector2 targetPosition)
+        Vector2 IClusterView.GetAnchoredPosition()
         {
-            _transform.anchoredPosition = targetPosition;
-        }
-
-        public void SetParent(Transform parent, bool positionStays = false)
-        {
-            _transform.SetParent(parent, positionStays);
-        }
-
-        public void SetAnchorPreset(Vector2 min, Vector2 max, Vector2 pivot)
-        {
-            _transform.anchorMin = min;
-            _transform.anchorMax = max;
-            _transform.pivot = pivot;
+            return _transform.anchoredPosition.ToNumerics();
         }
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            _dragHandler.BeginDrag(this);
+            _clusterPresenter.HandleBeginDrag(this);
 
             _canvasGroup.blocksRaycasts = false;
             SetParent(_draggableCanvas.transform, true);
@@ -78,16 +72,49 @@ namespace Kdevaulo.WordPuzzle.View
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            SetAnchoredPosition(_transform.anchoredPosition + eventData.delta / _draggableCanvas.scaleFactor);
+            _clusterPresenter.HandleDrag(this, eventData.delta.ToNumerics());
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            _dragHandler.EndDrag(this);
+            _clusterPresenter.HandleDrop(this);
 
             _canvasGroup.blocksRaycasts = true;
+
             if (_draggableCanvas.transform == _transform.parent)
+            {
                 SetParent(_startParent);
+            }
+        }
+
+        Vector2 IClusterItem.GetPosition()
+        {
+            return _transform.position.ToNumerics();
+        }
+
+        void IDraggingItem.SetPosition(Vector2 position)
+        {
+            _transform.position = position.ToUnity();
+        }
+
+        void IDraggingItem.SetAnchorPreset(AnchorPreset preset)
+        {
+            _transform.anchorMin = preset.AnchorMin.ToUnity();
+            _transform.anchorMax = preset.AnchorMax.ToUnity();
+            _transform.pivot = preset.Pivot.ToUnity();
+        }
+
+        void IDraggingItem.SetParent(ITransform transformAdapter)
+        {
+            var adapter = transformAdapter as TransformAdapter;
+            Assert.IsNotNull(adapter);
+
+            SetParent(adapter.Transform);
+        }
+
+        private void SetParent(Transform parent, bool positionStays = false)
+        {
+            _transform.SetParent(parent, positionStays);
         }
     }
 }

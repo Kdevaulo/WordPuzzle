@@ -14,7 +14,7 @@ using Zenject;
 namespace Kdevaulo.WordPuzzle.View
 {
     [AddComponentMenu(nameof(WordView) + " in " + nameof(View))]
-    public class WordView : MonoBehaviour, IWordView, IDropHandler, IPointerEnterHandler, IPointerExitHandler, ITickable
+    public class WordView : MonoBehaviour, IWordView, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("Values")]
         [SerializeField] private Vector2 _anchorMin = Vector2.one / 2f;
@@ -27,33 +27,35 @@ namespace Kdevaulo.WordPuzzle.View
 
         private IWordPresenter _wordPresenter;
 
-        private DragHandler _dragHandler;
         private CellColors _cellColors;
 
         private bool _isPointerOver;
 
+        private TransformAdapter _transformAdapter;
+
         [Inject]
-        public void Construct(IWordPresenter wordPresenter, DragHandler dragHandler, WordsData wordsData)
+        public void Construct(IWordPresenter wordPresenter, WordsData wordsData)
         {
             _wordPresenter = wordPresenter;
-            _dragHandler = dragHandler;
             _cellColors = wordsData.Colors;
 
             var cellPositions = _cells.Select(x => x.GetPosition().ToNumerics()).ToArray();
-            _wordPresenter.SetSells(this, cellPositions);
+            _wordPresenter.InitializeWord(this, cellPositions);
         }
 
-        void ITickable.Tick()
+        AnchorPreset IWordView.GetAnchorPreset()
         {
-            _wordPresenter.ClearSelected(this);
-
-            if (_isPointerOver && _dragHandler.CurrentDraggingView != null)
+            return new AnchorPreset()
             {
-                var position = (Vector2) _dragHandler.CurrentDraggingView.transform.position;
-                var cellsCount = _dragHandler.CurrentDraggingView.ClusterLength;
+                AnchorMax = _anchorMax.ToNumerics(),
+                AnchorMin = _anchorMin.ToNumerics(),
+                Pivot = _pivot.ToNumerics()
+            };
+        }
 
-                _wordPresenter.TryHighlightCells(this, position.ToNumerics(), cellsCount);
-            }
+        ITransform IWordView.GetTransform()
+        {
+            return _transformAdapter ?? new TransformAdapter(_transform);
         }
 
         void IWordView.SetCellState(int cellIndex, State state)
@@ -73,32 +75,18 @@ namespace Kdevaulo.WordPuzzle.View
             _cells[cellIndex].SetColor(targetColor);
         }
 
-        void IWordView.HandleCellsOccupied(System.Numerics.Vector2 position)
-        {
-            var cluster = _dragHandler.CurrentDraggingView;
-            cluster.SetParent(_transform);
-            cluster.SetAnchorPreset(_anchorMin, _anchorMax, _pivot);
-            cluster.SetPosition(position.ToUnity());
-        }
-
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            _isPointerOver = true;
+            _wordPresenter.SetIsPointerOver(this, true);
         }
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            _isPointerOver = false;
+            _wordPresenter.SetIsPointerOver(this, false);
         }
 
         void IDropHandler.OnDrop(PointerEventData eventData)
         {
-            // todo: move to cluster logic
-
-            var cluster = _dragHandler.CurrentDraggingView;
-            if (cluster == null)
-                return;
-
             _wordPresenter.TryOccupyCells(this);
         }
     }

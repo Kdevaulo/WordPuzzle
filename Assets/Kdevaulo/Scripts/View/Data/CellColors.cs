@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Kdevaulo.WordPuzzle.View.Data
 {
     [Serializable]
-    public struct CellColors
+    public class CellColors
     {
         public Color HighlightColor;
         public Color OccupiedColor;

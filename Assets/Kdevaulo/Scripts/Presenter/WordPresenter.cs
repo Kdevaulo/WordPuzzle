@@ -9,19 +9,37 @@ using Vector2 = System.Numerics.Vector2;
 
 namespace Kdevaulo.WordPuzzle.Presenter
 {
-    public class WordPresenter : IWordPresenter
+    public class WordPresenter : IWordPresenter, ITickable
     {
         [Inject]
         private IWordModel _wordModel;
+        [Inject]
+        private DragHandler _dragHandler;
 
-        void IWordPresenter.SetSells(IWordView view, Vector2[] cellPositions)
+        void ITickable.Tick()
         {
-            _wordModel.SetCells(view, cellPositions);
+            _wordModel.ClearSelected();
+
+            var draggingItem = _dragHandler.CurrentItem;
+
+            if (draggingItem != null)
+            {
+                var views = _wordModel.GetSelectedWordViews();
+
+                var position = draggingItem.GetPosition();
+
+                foreach (var view in views)
+                {
+                    var cellsCount = draggingItem.ClusterLength;
+
+                    TryHighlightCells(view, position, cellsCount);
+                }
+            }
         }
 
-        void IWordPresenter.TryHighlightCells(IWordView view, Vector2 draggingViewPosition, int highlightCount)
+        void IWordPresenter.InitializeWord(IWordView view, Vector2[] cellPositions)
         {
-            _wordModel.TryHighlightClosest(draggingViewPosition, highlightCount, view);
+            _wordModel.SetCells(view, cellPositions);
         }
 
         void IWordPresenter.TryOccupyCells(IWordView view)
@@ -38,12 +56,17 @@ namespace Kdevaulo.WordPuzzle.Presenter
 
             var position = CalculateTargetPosition(selectedCells);
 
-            view.HandleCellsOccupied(position);
+            _dragHandler.HandleCorrectDrop(position, view.GetAnchorPreset(), view.GetTransform());
         }
 
-        void IWordPresenter.ClearSelected(IWordView view)
+        void IWordPresenter.SetIsPointerOver(IWordView wordView, bool value)
         {
-            _wordModel.ClearSelected(view);
+            _wordModel.SetIsPointerOver(wordView, value);
+        }
+
+        private void TryHighlightCells(IWordView view, Vector2 draggingViewPosition, int highlightCount)
+        {
+            _wordModel.TryHighlightClosest(draggingViewPosition, highlightCount, view);
         }
 
         private Vector2 CalculateTargetPosition(Cell[] cells)

@@ -4,9 +4,8 @@ namespace Kdevaulo.WordPuzzle.Core
 {
     public interface IWordPresenter
     {
-        void SetSells(IWordView view, Vector2[] cellPositions);
-        void TryHighlightCells(IWordView view, Vector2 draggingViewPosition, int count);
+        void InitializeWord(IWordView view, Vector2[] cellPositions);
         void TryOccupyCells(IWordView view);
-        void ClearSelected(IWordView view);
+        void SetIsPointerOver(IWordView view, bool value);
     }
 }

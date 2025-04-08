@@ -21,13 +21,15 @@ namespace Kdevaulo.WordPuzzle.Installers
             Container.Bind<LevelLoaderService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle().NonLazy();
 
-            Container.BindInterfacesAndSelfTo<WordModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<MainView>().FromComponentInHierarchy().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<ClusterPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<WordPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ClusterModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WordModel>().AsSingle();
 
             Container.Bind<DragHandler>().AsSingle().NonLazy();
             Container.Bind<WordsData>().FromInstance(_wordsData).AsSingle();
-
-            Container.Bind<MainView>().FromComponentInHierarchy().AsSingle();
 
             Container.BindInterfacesAndSelfTo<ClusterSpawner>().AsSingle()
                 .WithArguments(_clustersData.Clusters, Container);

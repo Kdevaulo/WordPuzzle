@@ -11,6 +11,7 @@ namespace Kdevaulo.WordPuzzle.Model
     public class WordModel : IWordModel, IDisposable
     {
         private Dictionary<IWordView, Cell[]> _cellsByViews = new Dictionary<IWordView, Cell[]>();
+        private Dictionary<IWordView, bool> _pointerOverView = new Dictionary<IWordView, bool>();
         private Dictionary<Cell, Action> _cellsSubscriptions = new Dictionary<Cell, Action>();
 
         void IDisposable.Dispose()
@@ -39,15 +40,18 @@ namespace Kdevaulo.WordPuzzle.Model
             TryHighlightCells(targetCells);
         }
 
-        void IWordModel.ClearSelected(IWordView view)
+        void IWordModel.ClearSelected()
         {
-            var cells = _cellsByViews[view];
-
-            foreach (var cell in cells)
+            foreach (var cellPair in _cellsByViews)
             {
-                if (cell.CurrentState == State.Selected)
+                var cells = cellPair.Value;
+
+                foreach (var cell in cells)
                 {
-                    cell.CurrentState = State.Free;
+                    if (cell.CurrentState == State.Selected)
+                    {
+                        cell.CurrentState = State.Free;
+                    }
                 }
             }
         }
@@ -84,6 +88,26 @@ namespace Kdevaulo.WordPuzzle.Model
 
         void IWordModel.TryFreeCells(IWordView view)
         {
+        }
+
+        void IWordModel.SetIsPointerOver(IWordView wordView, bool value)
+        {
+            _pointerOverView[wordView] = value;
+        }
+
+        List<IWordView> IWordModel.GetSelectedWordViews()
+        {
+            var views = new List<IWordView>();
+
+            foreach (var item in _pointerOverView)
+            {
+                if (item.Value)
+                {
+                    views.Add(item.Key);
+                }
+            }
+
+            return views;
         }
 
         private void SubscribeCell(IWordView view, int index, Cell cell)
