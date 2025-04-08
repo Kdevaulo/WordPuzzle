@@ -1,8 +1,6 @@
-﻿using Kdevaulo.WordPuzzle.Presentation.Views;
+﻿using UnityEngine;
 
-using UnityEngine;
-
-namespace Kdevaulo.WordPuzzle.Presentation.Data
+namespace Kdevaulo.WordPuzzle.View.Data
 {
     [CreateAssetMenu(fileName = nameof(ClustersData), menuName = nameof(WordPuzzle) + "/" + nameof(ClustersData))]
     public class ClustersData : ScriptableObject

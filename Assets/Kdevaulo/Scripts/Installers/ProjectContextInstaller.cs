@@ -2,7 +2,7 @@ using UnityEngine;
 
 using Zenject;
 
-namespace Kdevaulo.WordPuzzle.Presentation.Installers
+namespace Kdevaulo.WordPuzzle.Installers
 {
     [AddComponentMenu(nameof(ProjectContextInstaller) + " in " + nameof(Installers))]
     public class ProjectContextInstaller : MonoInstaller

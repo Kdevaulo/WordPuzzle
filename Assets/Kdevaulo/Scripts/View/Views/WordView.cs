@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
+using Kdevaulo.WordPuzzle.View.Data;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 using Zenject;
 
-using CellColors = Kdevaulo.WordPuzzle.Presentation.Data.CellColors;
-
-namespace Kdevaulo.WordPuzzle.Presentation.Views
+namespace Kdevaulo.WordPuzzle.View
 {
-    [AddComponentMenu(nameof(WordView) + " in " + nameof(Views))]
+    [AddComponentMenu(nameof(WordView) + " in " + nameof(View))]
     public class WordView : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("Values")]

@@ -2,17 +2,14 @@
 using System.Linq;
 
 using Kdevaulo.WordPuzzle.Core;
-using Kdevaulo.WordPuzzle.Presentation.Views;
+using Kdevaulo.WordPuzzle.Core.Data;
 
 using UnityEngine;
 using UnityEngine.Assertions;
 
 using Zenject;
 
-using ClusterView = Kdevaulo.WordPuzzle.Presentation.Views.ClusterView;
-using Level = Kdevaulo.WordPuzzle.Core.Data.Level;
-
-namespace Kdevaulo.WordPuzzle
+namespace Kdevaulo.WordPuzzle.View
 {
     public class ClusterSpawner : IClusterSpawner
     {

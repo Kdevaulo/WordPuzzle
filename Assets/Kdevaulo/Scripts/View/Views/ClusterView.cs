@@ -7,10 +7,10 @@ using Zenject;
 
 using Assert = UnityEngine.Assertions.Assert;
 
-namespace Kdevaulo.WordPuzzle.Presentation.Views
+namespace Kdevaulo.WordPuzzle.View
 {
     [RequireComponent(typeof(CanvasGroup))]
-    [AddComponentMenu(nameof(ClusterView) + " in " + nameof(Views))]
+    [AddComponentMenu(nameof(ClusterView) + " in " + nameof(View))]
     public class ClusterView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public int ClusterLength => _letterContainers.Length;
@@ -19,10 +19,9 @@ namespace Kdevaulo.WordPuzzle.Presentation.Views
         [SerializeField] private RectTransform _transform;
         [SerializeField] private CanvasGroup _canvasGroup;
 
+        private DragHandler _dragHandler;
         private Canvas _draggableCanvas;
         private Transform _startParent;
-
-        private DragHandler _dragHandler;
 
         [Inject]
         public void Construct(DragHandler dragHandler)
@@ -69,7 +68,7 @@ namespace Kdevaulo.WordPuzzle.Presentation.Views
 
             _canvasGroup.blocksRaycasts = false;
             SetParent(_draggableCanvas.transform, true);
-            transform.SetAsLastSibling();
+            _transform.SetAsLastSibling();
         }
 
         void IDragHandler.OnDrag(PointerEventData eventData)

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace Kdevaulo.WordPuzzle.Presentation.Views
+namespace Kdevaulo.WordPuzzle.View
 {
-    [AddComponentMenu(nameof(MainView) + " in " + nameof(Views))]
+    [AddComponentMenu(nameof(MainView) + " in " + nameof(View))]
     public class MainView : MonoBehaviour
     {
         [field: SerializeField] public Transform ClustersParent { get; private set; }

@@ -8,7 +8,7 @@ using Zenject;
 
 namespace Kdevaulo.WordPuzzle.Core
 {
-    public class AbstractLevelLoader
+    public class LevelLoaderService
     {
         [Inject]
         private ILevelLoader _levelLoader;

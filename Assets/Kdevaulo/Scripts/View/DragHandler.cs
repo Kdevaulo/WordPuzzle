@@ -1,6 +1,4 @@
-﻿using Kdevaulo.WordPuzzle.Presentation.Views;
-
-namespace Kdevaulo.WordPuzzle.Presentation
+﻿namespace Kdevaulo.WordPuzzle.View
 {
     public class DragHandler
     {

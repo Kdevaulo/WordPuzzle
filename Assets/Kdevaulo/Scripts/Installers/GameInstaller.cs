@@ -1,14 +1,13 @@
 ﻿using Kdevaulo.WordPuzzle.Core;
-using Kdevaulo.WordPuzzle.Data;
-using Kdevaulo.WordPuzzle.Presentation.Views;
+using Kdevaulo.WordPuzzle.Presenter;
+using Kdevaulo.WordPuzzle.View;
+using Kdevaulo.WordPuzzle.View.Data;
 
 using UnityEngine;
 
 using Zenject;
 
-using ClustersData = Kdevaulo.WordPuzzle.Presentation.Data.ClustersData;
-
-namespace Kdevaulo.WordPuzzle.Presentation.Installers
+namespace Kdevaulo.WordPuzzle.Installers
 {
     [AddComponentMenu(nameof(GameInstaller) + " in " + nameof(Installers))]
     public class GameInstaller : MonoInstaller
@@ -19,7 +18,7 @@ namespace Kdevaulo.WordPuzzle.Presentation.Installers
         public override void InstallBindings()
         {
             // core
-            Container.Bind<AbstractLevelLoader>().AsSingle();
+            Container.Bind<LevelLoaderService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle().NonLazy();
 
             // unity
@@ -30,7 +29,7 @@ namespace Kdevaulo.WordPuzzle.Presentation.Installers
             Container.BindInterfacesAndSelfTo<ClusterSpawner>().AsSingle()
                 .WithArguments(_clustersData.Clusters, Container);
 
-            Container.BindInterfacesAndSelfTo<LevelLoader>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LocalLevelLoader>().AsSingle();
 
             Container.Bind<WordView>().FromComponentsInHierarchy().AsTransient();
         }

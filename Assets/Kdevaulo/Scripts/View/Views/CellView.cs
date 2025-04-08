@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace Kdevaulo.WordPuzzle.Presentation.Views
+namespace Kdevaulo.WordPuzzle.View
 {
-    [AddComponentMenu(nameof(CellView) + " in " + nameof(Views))]
+    [AddComponentMenu(nameof(CellView) + " in " + nameof(View))]
     public class CellView : MonoBehaviour
     {
         [SerializeField] private Image _background;

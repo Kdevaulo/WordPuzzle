@@ -7,9 +7,9 @@ using Kdevaulo.WordPuzzle.Core.Data;
 
 using UnityEngine;
 
-namespace Kdevaulo.WordPuzzle.Presentation
+namespace Kdevaulo.WordPuzzle.Installers
 {
-    public class LevelLoader : ILevelLoader
+    public class LocalLevelLoader : ILevelLoader
     {
         async UniTask<Level> ILevelLoader.TryLoadLevelAsync(int levelId, CancellationToken token)
         {

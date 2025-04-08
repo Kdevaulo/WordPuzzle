@@ -2,18 +2,20 @@
 
 using Cysharp.Threading.Tasks;
 
+using Kdevaulo.WordPuzzle.Core;
+
 using Zenject;
 
-namespace Kdevaulo.WordPuzzle.Core
+namespace Kdevaulo.WordPuzzle.Presenter
 {
     public class GameController : IInitializable
     {
-        private readonly AbstractLevelLoader _levelLoader;
+        private readonly LevelLoaderService _levelLoader;
         private readonly IClusterSpawner _clusterSpawner;
 
         private CancellationTokenSource _cts;
 
-        public GameController(AbstractLevelLoader levelLoader, IClusterSpawner clusterSpawner)
+        public GameController(LevelLoaderService levelLoader, IClusterSpawner clusterSpawner)
         {
             _levelLoader = levelLoader;
             _clusterSpawner = clusterSpawner;
