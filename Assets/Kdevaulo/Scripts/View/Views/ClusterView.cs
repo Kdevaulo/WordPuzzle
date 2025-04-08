@@ -47,6 +47,11 @@ namespace Kdevaulo.WordPuzzle.View
 
         public void SetPosition(Vector2 targetPosition)
         {
+            _transform.position = targetPosition;
+        }
+
+        public void SetAnchoredPosition(Vector2 targetPosition)
+        {
             _transform.anchoredPosition = targetPosition;
         }
 
@@ -73,7 +78,7 @@ namespace Kdevaulo.WordPuzzle.View
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            SetPosition(_transform.anchoredPosition + eventData.delta / _draggableCanvas.scaleFactor);
+            SetAnchoredPosition(_transform.anchoredPosition + eventData.delta / _draggableCanvas.scaleFactor);
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)

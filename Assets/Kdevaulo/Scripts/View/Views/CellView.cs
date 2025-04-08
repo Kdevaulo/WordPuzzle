@@ -16,7 +16,7 @@ namespace Kdevaulo.WordPuzzle.View
 
         public Vector2 GetPosition()
         {
-            return _transform.anchoredPosition;
+            return _transform.position;
         }
     }
 }

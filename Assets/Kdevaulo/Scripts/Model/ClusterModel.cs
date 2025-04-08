@@ -1,4 +1,4 @@
-﻿namespace Kdevaulo.WordPuzzle.Core.Models
+﻿namespace Kdevaulo.WordPuzzle.Model
 {
     public class ClusterModel
     {
