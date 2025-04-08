@@ -11,8 +11,10 @@ namespace Kdevaulo.WordPuzzle.Model
     public class WordModel : IWordModel, IDisposable
     {
         private Dictionary<IWordView, Cell[]> _cellsByViews = new Dictionary<IWordView, Cell[]>();
-        private Dictionary<IWordView, bool> _pointerOverView = new Dictionary<IWordView, bool>();
+        private Dictionary<Cluster, Cell[]> _occupiedCells = new Dictionary<Cluster, Cell[]>();
         private Dictionary<Cell, Action> _cellsSubscriptions = new Dictionary<Cell, Action>();
+
+        private IWordView _currentSelectedView;
 
         void IDisposable.Dispose()
         {
@@ -40,7 +42,7 @@ namespace Kdevaulo.WordPuzzle.Model
             TryHighlightCells(targetCells);
         }
 
-        void IWordModel.ClearSelected()
+        void IWordModel.ClearSelectedCells()
         {
             foreach (var cellPair in _cellsByViews)
             {
@@ -78,36 +80,55 @@ namespace Kdevaulo.WordPuzzle.Model
             _cellsByViews[view] = cells.ToArray();
         }
 
-        void IWordModel.OccupyCells(Cell[] selectedCells)
+        void IWordModel.OccupyCells(Cell[] selectedCells, Cluster cluster)
         {
             foreach (var cell in selectedCells)
             {
-                cell.CurrentState = State.Occupied;
+                cell.Occupy(cluster);
             }
+
+            _occupiedCells[cluster] = selectedCells;
         }
 
-        void IWordModel.TryFreeCells(IWordView view)
+        void IWordModel.TryFreeCells(Cluster cluster)
         {
+            if (!_occupiedCells.TryGetValue(cluster, out var cells))
+            {
+                return;
+            }
+
+            foreach (var cell in cells)
+            {
+                if (cell.Cluster == cluster)
+                {
+                    cell.Free();
+                }
+            }
+
+            _occupiedCells.Remove(cluster);
+        }
+
+        void IWordModel.ResetPointerOver()
+        {
+            _currentSelectedView = null;
         }
 
         void IWordModel.SetIsPointerOver(IWordView wordView, bool value)
         {
-            _pointerOverView[wordView] = value;
-        }
-
-        List<IWordView> IWordModel.GetSelectedWordViews()
-        {
-            var views = new List<IWordView>();
-
-            foreach (var item in _pointerOverView)
+            if (_currentSelectedView == wordView && !value)
             {
-                if (item.Value)
-                {
-                    views.Add(item.Key);
-                }
+                _currentSelectedView = null;
             }
 
-            return views;
+            if (value)
+            {
+                _currentSelectedView = wordView;
+            }
+        }
+
+        IWordView IWordModel.GetSelectedWordView()
+        {
+            return _currentSelectedView;
         }
 
         private void SubscribeCell(IWordView view, int index, Cell cell)
@@ -134,6 +155,45 @@ namespace Kdevaulo.WordPuzzle.Model
             {
                 cell.CurrentState = State.Selected;
             }
+        }
+
+        public bool IsWordAssembledCorrectly(Word word, Cell[] columnCells)
+        {
+            var assembledClusters = new List<Cluster>();
+            var i = 0;
+
+            while (i < columnCells.Length)
+            {
+                var startCell = columnCells[i];
+                var cluster = startCell.Cluster;
+
+                if (cluster == null)
+                    return false;
+
+                var length = cluster.Length;
+                if (i + length > columnCells.Length)
+                    return false;
+
+                for (var j = 0; j < length; j++)
+                {
+                    if (columnCells[i + j].Cluster != cluster)
+                        return false;
+                }
+
+                assembledClusters.Add(cluster);
+                i += length;
+            }
+
+            if (assembledClusters.Count != word.Clusters.Length)
+                return false;
+
+            for (var k = 0; k < assembledClusters.Count; k++)
+            {
+                if (assembledClusters[k].Name != word.Clusters[k])
+                    return false;
+            }
+
+            return true;
         }
     }
 }

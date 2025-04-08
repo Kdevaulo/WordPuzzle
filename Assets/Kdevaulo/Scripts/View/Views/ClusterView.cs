@@ -4,19 +4,19 @@ using Kdevaulo.WordPuzzle.Core.Data;
 using TMPro;
 
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
 
 using Zenject;
 
-using Assert = UnityEngine.Assertions.Assert;
 using Vector2 = System.Numerics.Vector2;
 
 namespace Kdevaulo.WordPuzzle.View
 {
     [RequireComponent(typeof(CanvasGroup))]
     [AddComponentMenu(nameof(ClusterView) + " in " + nameof(View))]
-    public class ClusterView : MonoBehaviour, IClusterView, IDraggingItem, IBeginDragHandler, IDragHandler,
-        IEndDragHandler
+    public class ClusterView : MonoBehaviour,
+        IDraggingItem, IBeginDragHandler, IDragHandler, IEndDragHandler
     {
         public int ClusterLength => _letterContainers.Length;
 
@@ -26,7 +26,7 @@ namespace Kdevaulo.WordPuzzle.View
 
         private IClusterPresenter _clusterPresenter;
 
-        private Canvas _draggableCanvas;
+        private Transform _draggableCanvas;
         private Transform _startParent;
 
         [Inject]
@@ -35,20 +35,15 @@ namespace Kdevaulo.WordPuzzle.View
             _clusterPresenter = clusterPresenter;
         }
 
-        public void Initialize(Canvas draggableCanvas)
+        void IClusterView.Initialize(ITransform transformAdapter, string text)
         {
-            _draggableCanvas = draggableCanvas;
+            var adapter = transformAdapter as TransformAdapter;
+            Assert.IsNotNull(adapter);
+
+            SetText(text);
+
+            _draggableCanvas = adapter.Transform;
             _startParent = transform.parent;
-        }
-
-        public void SetClusterText(string cluster)
-        {
-            Assert.IsTrue(cluster.Length == _letterContainers.Length);
-
-            for (var i = 0; i < cluster.Length; i++)
-            {
-                _letterContainers[i].text = cluster[i].ToString();
-            }
         }
 
         void IClusterView.SetAnchoredPosition(Vector2 targetPosition)
@@ -87,7 +82,7 @@ namespace Kdevaulo.WordPuzzle.View
             }
         }
 
-        Vector2 IClusterItem.GetPosition()
+        Vector2 IWordPart.GetPosition()
         {
             return _transform.position.ToNumerics();
         }
@@ -110,6 +105,16 @@ namespace Kdevaulo.WordPuzzle.View
             Assert.IsNotNull(adapter);
 
             SetParent(adapter.Transform);
+        }
+
+        private void SetText(string text)
+        {
+            Assert.IsTrue(text.Length == _letterContainers.Length);
+
+            for (var i = 0; i < text.Length; i++)
+            {
+                _letterContainers[i].text = text[i].ToString();
+            }
         }
 
         private void SetParent(Transform parent, bool positionStays = false)

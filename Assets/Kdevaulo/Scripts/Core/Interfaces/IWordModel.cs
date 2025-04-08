@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
 
 using Kdevaulo.WordPuzzle.Core.Data;
 
@@ -9,11 +8,12 @@ namespace Kdevaulo.WordPuzzle.Core
     {
         public void TryHighlightClosest(Vector2 draggingViewPosition, int count, IWordView view);
         void SetCells(IWordView view, Vector2[] cellPositions);
-        void ClearSelected();
+        void ClearSelectedCells();
         Cell[] GetSelectedCells(IWordView view);
-        void OccupyCells(Cell[] selectedCells);
-        void TryFreeCells(IWordView view);
+        void OccupyCells(Cell[] selectedCells, Cluster cluster);
+        void TryFreeCells(Cluster cluster);
         void SetIsPointerOver(IWordView wordView, bool value);
-        List<IWordView> GetSelectedWordViews();
+        void ResetPointerOver();
+        IWordView GetSelectedWordView();
     }
 }

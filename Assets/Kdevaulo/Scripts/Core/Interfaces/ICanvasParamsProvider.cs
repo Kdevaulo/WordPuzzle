@@ -1,7 +1,8 @@
 ﻿namespace Kdevaulo.WordPuzzle.Core
 {
-    public interface IScaleProvider
+    public interface ICanvasParamsProvider
     {
         public float GetScaleFactor();
+        public ITransform GetTransform();
     }
 }

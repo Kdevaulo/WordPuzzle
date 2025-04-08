@@ -9,6 +9,7 @@ namespace Kdevaulo.WordPuzzle.Core.Data
 
         public int Id { get; private set; }
         public Vector2 Position { get; private set; }
+        public Cluster Cluster { get; private set; }
         public State CurrentState
         {
             get => _currentState;
@@ -25,6 +26,18 @@ namespace Kdevaulo.WordPuzzle.Core.Data
         {
             Id = id;
             Position = position;
+            CurrentState = State.Free;
+        }
+
+        public void Occupy(Cluster cluster)
+        {
+            Cluster = cluster;
+            CurrentState = State.Occupied;
+        }
+
+        public void Free()
+        {
+            Cluster = null;
             CurrentState = State.Free;
         }
     }

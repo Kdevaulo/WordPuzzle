@@ -15,16 +15,20 @@ namespace Kdevaulo.WordPuzzle.View
     {
         private readonly ClusterView[] _clusterViewPrefabs;
 
+        private readonly IClusterPresenter _clusterPresenter;
+
         private readonly DiContainer _container;
         private readonly MainView _mainView;
         private readonly Transform _parent;
 
         private List<ClusterView> _createdViews;
 
-        public ClusterSpawner(ClusterView[] clusterViewPrefabs, DiContainer container, MainView mainView)
+        public ClusterSpawner(ClusterView[] clusterViewPrefabs, DiContainer container, MainView mainView,
+            IClusterPresenter clusterPresenter)
         {
             _clusterViewPrefabs = clusterViewPrefabs;
             _mainView = mainView;
+            _clusterPresenter = clusterPresenter;
             _container = container;
             _parent = mainView.ClustersParent;
             _createdViews = new List<ClusterView>();
@@ -51,8 +55,7 @@ namespace Kdevaulo.WordPuzzle.View
             var createdItem = _container.InstantiatePrefabForComponent<ClusterView>(targetCluster, _parent);
             _createdViews.Add(createdItem);
 
-            createdItem.SetClusterText(text);
-            createdItem.Initialize(_mainView.DragCanvas);
+            _clusterPresenter.AddCluster(createdItem, text);
         }
     }
 }

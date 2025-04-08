@@ -2,7 +2,7 @@
 
 namespace Kdevaulo.WordPuzzle.Core
 {
-    public interface IClusterItem
+    public interface IWordPart
     {
         public int ClusterLength { get; }
         public Vector2 GetPosition();

@@ -14,7 +14,8 @@ using Zenject;
 namespace Kdevaulo.WordPuzzle.View
 {
     [AddComponentMenu(nameof(WordView) + " in " + nameof(View))]
-    public class WordView : MonoBehaviour, IWordView, IDropHandler, IPointerEnterHandler, IPointerExitHandler
+    public class WordView : MonoBehaviour,
+        IWordView, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("Values")]
         [SerializeField] private Vector2 _anchorMin = Vector2.one / 2f;

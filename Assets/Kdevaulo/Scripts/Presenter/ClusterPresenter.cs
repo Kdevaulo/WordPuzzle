@@ -9,7 +9,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
     public class ClusterPresenter : IClusterPresenter
     {
         [Inject]
-        private IScaleProvider _scaleFactorProvider;
+        private ICanvasParamsProvider _canvasProvider;
         [Inject]
         private IClusterModel _model;
         [Inject]
@@ -18,7 +18,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
         void IClusterPresenter.HandleDrag(IClusterView clusterView, Vector2 delta)
         {
             clusterView
-                .SetAnchoredPosition(clusterView.GetAnchoredPosition() + delta / _scaleFactorProvider.GetScaleFactor());
+                .SetAnchoredPosition(clusterView.GetAnchoredPosition() + delta / _canvasProvider.GetScaleFactor());
         }
 
         void IClusterPresenter.HandleDrop(IDraggingItem view)
@@ -28,7 +28,15 @@ namespace Kdevaulo.WordPuzzle.Presenter
 
         void IClusterPresenter.HandleBeginDrag(IDraggingItem view)
         {
-            _dragHandler.AddItem(view);
+            var cluster = _model.GetCluster(view);
+            _dragHandler.AddItem(view, cluster);
+        }
+
+        void IClusterPresenter.AddCluster(IClusterView createdItem, string text)
+        {
+            _model.AddCluster(createdItem, text);
+
+            createdItem.Initialize(_canvasProvider.GetTransform(), text);
         }
     }
 }
