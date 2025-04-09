@@ -14,6 +14,8 @@ namespace Kdevaulo.WordPuzzle.Presenter
         [Inject]
         private IWordModel _model;
         [Inject]
+        private IValidationService _validationService;
+        [Inject]
         private DragHandler _dragHandler;
 
         void IInitializable.Initialize()
@@ -71,6 +73,13 @@ namespace Kdevaulo.WordPuzzle.Presenter
 
             _model.ResetPointerOver();
             _dragHandler.HandleCorrectDrop(position, view.GetAnchorPreset(), view.GetTransform());
+
+            var solvedWord = _model.TryGetSolvedWord(cluster);
+
+            if (solvedWord != string.Empty)
+            {
+                _validationService.ValidateWord(solvedWord);
+            }
         }
 
         void IWordPresenter.SetIsPointerOver(IWordView wordView, bool value)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Text;
 
 using Kdevaulo.WordPuzzle.Core;
 using Kdevaulo.WordPuzzle.Core.Data;
@@ -51,7 +52,7 @@ namespace Kdevaulo.WordPuzzle.Model
                 .Where(x => closestCells.Contains(x))
                 .ToArray();
 
-            TryHighlightCells(targetCells);
+            TrySelectCells(targetCells);
         }
 
         void IWordModel.ClearSelectedCells()
@@ -143,6 +144,62 @@ namespace Kdevaulo.WordPuzzle.Model
             return _currentSelectedView;
         }
 
+        string IWordModel.TryGetSolvedWord(Cluster cluster)
+        {
+            foreach (var pair in _cellsByViews)
+            {
+                var cells = pair.Value;
+
+                if (!IsWordSolved(cluster, cells))
+                {
+                    continue;
+                }
+
+                var sb = new StringBuilder();
+                BuildTextFromCells(cells, sb);
+
+                return sb.ToString();
+            }
+
+            return string.Empty;
+        }
+
+        private void BuildTextFromCells(Cell[] cells, StringBuilder sb)
+        {
+            Cluster lastCluster = null;
+
+            foreach (var cell in cells)
+            {
+                var cluster = cell.Cluster;
+
+                if (cluster != lastCluster)
+                {
+                    sb.Append(cluster.Name);
+                    lastCluster = cluster;
+                }
+            }
+        }
+
+        private bool IsWordSolved(Cluster cluster, Cell[] cells)
+        {
+            var hasCluster = false;
+
+            foreach (var cell in cells)
+            {
+                if (cell.CurrentState != State.Occupied)
+                {
+                    return false;
+                }
+
+                if (cell.Cluster == cluster)
+                {
+                    hasCluster = true;
+                }
+            }
+
+            return hasCluster;
+        }
+
         private void SubscribeCell(IWordView view, int index, Cell cell)
         {
             Action action = () => HandleCellStateChanged(view, index);
@@ -156,7 +213,7 @@ namespace Kdevaulo.WordPuzzle.Model
             view.SetCellState(id, cells[id].CurrentState);
         }
 
-        private void TryHighlightCells(Cell[] targetCells)
+        private void TrySelectCells(Cell[] targetCells)
         {
             if (targetCells.Any(cell => cell.CurrentState == State.Occupied))
             {

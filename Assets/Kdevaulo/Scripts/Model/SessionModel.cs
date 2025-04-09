@@ -1,20 +1,30 @@
-﻿using Kdevaulo.WordPuzzle.Core;
+﻿using System.Collections.Generic;
+
+using Kdevaulo.WordPuzzle.Core;
 using Kdevaulo.WordPuzzle.Core.Data;
 
 namespace Kdevaulo.WordPuzzle.Model
 {
     public class SessionModel : ISessionModel
     {
-        private Level _currentLevel;
+        Level ISessionModel.CurrentLevel { get; set; }
+        string[] ISessionModel.SolvedWords => _solvedWords.ToArray();
 
-        public void SetLevel(Level level)
+        private List<string> _solvedWords = new List<string>();
+
+        void ISessionModel.SetSolvedWord(string solvedWord)
         {
-            _currentLevel = level;
+            if (_solvedWords.Contains(solvedWord))
+            {
+                _solvedWords.Remove(solvedWord);
+            }
+
+            _solvedWords.Add(solvedWord);
         }
 
-        Level ISessionModel.TryGetLevel()
+        void ISessionModel.ClearSolvedWords()
         {
-            return _currentLevel;
+            _solvedWords.Clear();
         }
     }
 }

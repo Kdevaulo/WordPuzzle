@@ -17,9 +17,23 @@ namespace Kdevaulo.WordPuzzle.Service
 
         [Inject]
         private ICellDataProvider _wordModel;
+        [Inject]
+        private ISessionModel _sessionModel;
 
-        void IValidationService.ValidateWords(Level level)
+        void IValidationService.ValidateWord(string solvedWord)
         {
+            var words = _sessionModel.CurrentLevel.Words;
+
+            if (words.Any(word => word.Name == solvedWord))
+            {
+                _sessionModel.SetSolvedWord(solvedWord);
+            }
+        }
+
+        void IValidationService.ValidateWords()
+        {
+            var level = _sessionModel.CurrentLevel;
+
             var cellsGroups = _wordModel.GetCells();
 
             if (!CheckGroupsCount(cellsGroups, level))

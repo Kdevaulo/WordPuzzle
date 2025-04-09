@@ -41,7 +41,6 @@ namespace Kdevaulo.WordPuzzle.Installers
             Container.BindInterfacesAndSelfTo<WordPresenter>().AsSingle();
 
             Container.BindInterfacesAndSelfTo<ClusterModel>().AsSingle();
-            Container.BindInterfacesAndSelfTo<SessionModel>().AsSingle();
             Container.BindInterfacesAndSelfTo<WordModel>().AsSingle();
         }
     }

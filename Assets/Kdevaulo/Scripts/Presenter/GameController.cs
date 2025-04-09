@@ -34,7 +34,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
             var loadedLevel = _levelLoader.GetLoadedLevel();
             Assert.IsNotNull(loadedLevel);
 
-            _model.SetLevel(loadedLevel);
+            _model.CurrentLevel = loadedLevel;
 
             if (loadedLevel?.Words != null && loadedLevel.Words.Length != 0)
             {

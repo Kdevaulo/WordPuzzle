@@ -1,3 +1,4 @@
+using Kdevaulo.WordPuzzle.Model;
 using Kdevaulo.WordPuzzle.Service;
 using Kdevaulo.WordPuzzle.View;
 
@@ -14,6 +15,7 @@ namespace Kdevaulo.WordPuzzle.Installers
         {
             Container.BindInterfacesAndSelfTo<SceneManagerAdapter>().AsSingle();
             Container.BindInterfacesAndSelfTo<SceneService>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SessionModel>().AsSingle();
         }
     }
 }

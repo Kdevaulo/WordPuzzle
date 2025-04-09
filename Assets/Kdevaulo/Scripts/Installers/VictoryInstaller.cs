@@ -1,5 +1,4 @@
-﻿using Kdevaulo.WordPuzzle.Model;
-using Kdevaulo.WordPuzzle.Presenter;
+﻿using Kdevaulo.WordPuzzle.Presenter;
 using Kdevaulo.WordPuzzle.View;
 
 using UnityEngine;
@@ -15,7 +14,6 @@ namespace Kdevaulo.WordPuzzle.Installers
         {
             Container.BindInterfacesAndSelfTo<VictoryView>().FromComponentsInHierarchy().AsSingle();
             Container.BindInterfacesAndSelfTo<VictoryPresenter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<VictoryModel>().AsSingle();
         }
     }
 }

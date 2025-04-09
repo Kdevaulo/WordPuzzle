@@ -16,8 +16,6 @@ namespace Kdevaulo.WordPuzzle.Presenter
         private ISceneService _sceneService;
         [Inject]
         private IValidationView _view;
-        [Inject]
-        private ISessionModel _model;
 
         private CancellationTokenSource _cts;
 
@@ -31,8 +29,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
 
         void IValidationPresenter.Validate()
         {
-            var level = _model.TryGetLevel();
-            _validationService.ValidateWords(level);
+            _validationService.ValidateWords();
         }
 
         void IDisposable.Dispose()

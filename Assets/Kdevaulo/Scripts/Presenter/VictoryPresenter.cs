@@ -12,9 +12,9 @@ namespace Kdevaulo.WordPuzzle.Presenter
         [Inject]
         private ISceneService _sceneService;
         [Inject]
-        private IVictoryModel _model;
-        [Inject]
         private IVictoryView _view;
+        [Inject]
+        private ISessionModel _sessionModel;
 
         private CancellationTokenSource _cts = new CancellationTokenSource();
 
@@ -31,8 +31,9 @@ namespace Kdevaulo.WordPuzzle.Presenter
 
         void IInitializable.Initialize()
         {
-            var victoryData = _model.GetVictoryText();
+            var victoryData = _sessionModel.SolvedWords;
             _view.SetText(victoryData);
+            _sessionModel.ClearSolvedWords();
         }
     }
 }

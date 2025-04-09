@@ -4,7 +4,9 @@ namespace Kdevaulo.WordPuzzle.Core
 {
     public interface ISessionModel
     {
-        public void SetLevel(Level level);
-        public Level TryGetLevel();
+        public Level CurrentLevel { get; set; }
+        public string[] SolvedWords { get; }
+        void SetSolvedWord(string solvedWords);
+        public void ClearSolvedWords();
     }
 }
