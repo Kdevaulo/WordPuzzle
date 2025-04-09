@@ -847,6 +847,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1245753627}
   - component: {fileID: 1245753628}
+  - component: {fileID: 1245753629}
   m_Layer: 0
   m_Name: SafeArea
   m_TagString: Untagged
@@ -888,6 +889,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99aec48a394b4314af90b7c15e5e473e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1245753629
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1245753626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e69e4ad2bd940a989ac993fdda71ba6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _resultTextContainer: {fileID: 186564667}
+  _menuButton: {fileID: 230506735}
+  _nextButton: {fileID: 1349886728}
 --- !u!1 &1349886726
 GameObject:
   m_ObjectHideFlags: 0
