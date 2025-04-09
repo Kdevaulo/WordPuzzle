@@ -1,4 +1,5 @@
-﻿using Kdevaulo.WordPuzzle.Core;
+﻿using Kdevaulo.Scripts.Service;
+using Kdevaulo.WordPuzzle.Core;
 using Kdevaulo.WordPuzzle.Model;
 using Kdevaulo.WordPuzzle.Presenter;
 using Kdevaulo.WordPuzzle.View;
@@ -20,23 +21,28 @@ namespace Kdevaulo.WordPuzzle.Installers
         {
             Container.Bind<LevelLoaderService>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle().NonLazy();
-
-            Container.BindInterfacesAndSelfTo<MainView>().FromComponentInHierarchy().AsSingle();
-
-            Container.BindInterfacesAndSelfTo<ClusterPresenter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<WordPresenter>().AsSingle();
-            Container.BindInterfacesAndSelfTo<ClusterModel>().AsSingle();
-            Container.BindInterfacesAndSelfTo<WordModel>().AsSingle();
-
-            Container.Bind<DragHandler>().AsSingle().NonLazy();
-            Container.Bind<WordsData>().FromInstance(_wordsData).AsSingle();
-
             Container.BindInterfacesAndSelfTo<ClusterSpawner>().AsSingle()
                 .WithArguments(_clustersData.Clusters, Container);
 
             Container.BindInterfacesAndSelfTo<LocalLevelLoader>().AsSingle();
 
+            Container.Bind<WordsData>().FromInstance(_wordsData).AsSingle();
+
+            Container.Bind<DragHandler>().AsSingle().NonLazy();
+
+            Container.BindInterfacesAndSelfTo<ValidationService>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<ValidationView>().FromComponentInHierarchy().AsSingle();
             Container.BindInterfacesAndSelfTo<WordView>().FromComponentsInHierarchy().AsTransient();
+            Container.BindInterfacesAndSelfTo<MainView>().FromComponentInHierarchy().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<ValidationPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<ClusterPresenter>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WordPresenter>().AsSingle();
+
+            Container.BindInterfacesAndSelfTo<ClusterModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SessionModel>().AsSingle();
+            Container.BindInterfacesAndSelfTo<WordModel>().AsSingle();
         }
     }
 }

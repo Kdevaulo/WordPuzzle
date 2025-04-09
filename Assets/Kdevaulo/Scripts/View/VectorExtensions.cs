@@ -4,7 +4,7 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Kdevaulo.WordPuzzle.View
 {
-    public static class VectorUtilities
+    public static class VectorExtensions
     {
         public static Vector2 ToNumerics(this UnityEngine.Vector2 vector)
         {

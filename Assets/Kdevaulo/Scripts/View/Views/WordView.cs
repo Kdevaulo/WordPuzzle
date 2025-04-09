@@ -26,7 +26,7 @@ namespace Kdevaulo.WordPuzzle.View
         [SerializeField] private RectTransform _transform;
         [SerializeField] private CellView[] _cells;
 
-        private IWordPresenter _wordPresenter;
+        private IWordPresenter _presenter;
 
         private CellColors _cellColors;
 
@@ -35,13 +35,13 @@ namespace Kdevaulo.WordPuzzle.View
         private TransformAdapter _transformAdapter;
 
         [Inject]
-        public void Construct(IWordPresenter wordPresenter, WordsData wordsData)
+        public void Construct(IWordPresenter presenter, WordsData wordsData)
         {
-            _wordPresenter = wordPresenter;
+            _presenter = presenter;
             _cellColors = wordsData.Colors;
 
             var cellPositions = _cells.Select(x => x.GetPosition().ToNumerics()).ToArray();
-            _wordPresenter.InitializeWord(this, cellPositions);
+            _presenter.InitializeWord(this, cellPositions);
         }
 
         AnchorPreset IWordView.GetAnchorPreset()
@@ -78,17 +78,17 @@ namespace Kdevaulo.WordPuzzle.View
 
         void IPointerEnterHandler.OnPointerEnter(PointerEventData eventData)
         {
-            _wordPresenter.SetIsPointerOver(this, true);
+            _presenter.SetIsPointerOver(this, true);
         }
 
         void IPointerExitHandler.OnPointerExit(PointerEventData eventData)
         {
-            _wordPresenter.SetIsPointerOver(this, false);
+            _presenter.SetIsPointerOver(this, false);
         }
 
         void IDropHandler.OnDrop(PointerEventData eventData)
         {
-            _wordPresenter.TryOccupyCells(this);
+            _presenter.TryOccupyCells(this);
         }
     }
 }

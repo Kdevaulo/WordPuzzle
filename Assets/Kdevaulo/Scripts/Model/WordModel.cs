@@ -8,7 +8,7 @@ using Kdevaulo.WordPuzzle.Core.Data;
 
 namespace Kdevaulo.WordPuzzle.Model
 {
-    public class WordModel : IWordModel, IDisposable
+    public class WordModel : IWordModel, ICellDataProvider, IDisposable
     {
         private Dictionary<IWordView, Cell[]> _cellsByViews = new Dictionary<IWordView, Cell[]>();
         private Dictionary<Cluster, Cell[]> _occupiedCells = new Dictionary<Cluster, Cell[]>();
@@ -24,6 +24,18 @@ namespace Kdevaulo.WordPuzzle.Model
             }
 
             _cellsSubscriptions.Clear();
+        }
+
+        List<Cell[]> ICellDataProvider.GetCells()
+        {
+            var outer = new List<Cell[]>(_cellsByViews.Count);
+
+            foreach (var item in _cellsByViews)
+            {
+                outer.Add(item.Value);
+            }
+
+            return outer;
         }
 
         void IWordModel.TryHighlightClosest(Vector2 draggingViewPosition, int count, IWordView view)
@@ -155,45 +167,6 @@ namespace Kdevaulo.WordPuzzle.Model
             {
                 cell.CurrentState = State.Selected;
             }
-        }
-
-        public bool IsWordAssembledCorrectly(Word word, Cell[] columnCells)
-        {
-            var assembledClusters = new List<Cluster>();
-            var i = 0;
-
-            while (i < columnCells.Length)
-            {
-                var startCell = columnCells[i];
-                var cluster = startCell.Cluster;
-
-                if (cluster == null)
-                    return false;
-
-                var length = cluster.Length;
-                if (i + length > columnCells.Length)
-                    return false;
-
-                for (var j = 0; j < length; j++)
-                {
-                    if (columnCells[i + j].Cluster != cluster)
-                        return false;
-                }
-
-                assembledClusters.Add(cluster);
-                i += length;
-            }
-
-            if (assembledClusters.Count != word.Clusters.Length)
-                return false;
-
-            for (var k = 0; k < assembledClusters.Count; k++)
-            {
-                if (assembledClusters[k].Name != word.Clusters[k])
-                    return false;
-            }
-
-            return true;
         }
     }
 }

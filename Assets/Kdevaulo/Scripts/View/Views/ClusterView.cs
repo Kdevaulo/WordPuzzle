@@ -24,15 +24,15 @@ namespace Kdevaulo.WordPuzzle.View
         [SerializeField] private RectTransform _transform;
         [SerializeField] private CanvasGroup _canvasGroup;
 
-        private IClusterPresenter _clusterPresenter;
+        private IClusterPresenter _presenter;
 
         private Transform _draggableCanvas;
         private Transform _startParent;
 
         [Inject]
-        public void Construct(IClusterPresenter clusterPresenter)
+        public void Construct(IClusterPresenter presenter)
         {
-            _clusterPresenter = clusterPresenter;
+            _presenter = presenter;
         }
 
         void IClusterView.Initialize(ITransform transformAdapter, string text)
@@ -58,7 +58,7 @@ namespace Kdevaulo.WordPuzzle.View
 
         void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
         {
-            _clusterPresenter.HandleBeginDrag(this);
+            _presenter.HandleBeginDrag(this);
 
             _canvasGroup.blocksRaycasts = false;
             SetParent(_draggableCanvas.transform, true);
@@ -67,12 +67,12 @@ namespace Kdevaulo.WordPuzzle.View
 
         void IDragHandler.OnDrag(PointerEventData eventData)
         {
-            _clusterPresenter.HandleDrag(this, eventData.delta.ToNumerics());
+            _presenter.HandleDrag(this, eventData.delta.ToNumerics());
         }
 
         void IEndDragHandler.OnEndDrag(PointerEventData eventData)
         {
-            _clusterPresenter.HandleDrop(this);
+            _presenter.HandleDrop(this);
 
             _canvasGroup.blocksRaycasts = true;
 

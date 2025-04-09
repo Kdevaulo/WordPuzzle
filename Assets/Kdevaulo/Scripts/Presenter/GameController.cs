@@ -4,22 +4,22 @@ using Cysharp.Threading.Tasks;
 
 using Kdevaulo.WordPuzzle.Core;
 
+using ModestTree;
+
 using Zenject;
 
 namespace Kdevaulo.WordPuzzle.Presenter
 {
     public class GameController : IInitializable
     {
-        private readonly LevelLoaderService _levelLoader;
-        private readonly IClusterSpawner _clusterSpawner;
+        [Inject]
+        private LevelLoaderService _levelLoader;
+        [Inject]
+        private IClusterSpawner _clusterSpawner;
+        [Inject]
+        private ISessionModel _model;
 
         private CancellationTokenSource _cts;
-
-        public GameController(LevelLoaderService levelLoader, IClusterSpawner clusterSpawner)
-        {
-            _levelLoader = levelLoader;
-            _clusterSpawner = clusterSpawner;
-        }
 
         void IInitializable.Initialize()
         {
@@ -32,6 +32,9 @@ namespace Kdevaulo.WordPuzzle.Presenter
             await _levelLoader.TryLoadLevelAsync(1, token);
 
             var loadedLevel = _levelLoader.GetLoadedLevel();
+            Assert.IsNotNull(loadedLevel);
+
+            _model.SetLevel(loadedLevel);
 
             if (loadedLevel?.Words != null && loadedLevel.Words.Length != 0)
             {
