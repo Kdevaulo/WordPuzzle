@@ -18,12 +18,12 @@ namespace Kdevaulo.WordPuzzle.View
         private readonly IClusterPresenter _clusterPresenter;
 
         private readonly DiContainer _container;
-        private readonly MainView _mainView;
+        private readonly MainGameView _mainView;
         private readonly Transform _parent;
 
         private List<ClusterView> _createdViews;
 
-        public ClusterSpawner(ClusterView[] clusterViewPrefabs, DiContainer container, MainView mainView,
+        public ClusterSpawner(ClusterView[] clusterViewPrefabs, DiContainer container, MainGameView mainView,
             IClusterPresenter clusterPresenter)
         {
             _clusterViewPrefabs = clusterViewPrefabs;

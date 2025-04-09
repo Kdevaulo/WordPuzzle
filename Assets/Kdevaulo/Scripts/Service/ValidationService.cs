@@ -8,7 +8,7 @@ using Kdevaulo.WordPuzzle.Core.Data;
 
 using Zenject;
 
-namespace Kdevaulo.Scripts.Service
+namespace Kdevaulo.WordPuzzle.Service
 {
     public class ValidationService : IValidationService
     {

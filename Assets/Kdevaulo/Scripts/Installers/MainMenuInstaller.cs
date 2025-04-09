@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using Kdevaulo.WordPuzzle.Presenter;
+using Kdevaulo.WordPuzzle.View;
+
+using UnityEngine;
 
 using Zenject;
 
@@ -9,6 +12,8 @@ namespace Kdevaulo.WordPuzzle.Installers
     {
         public override void InstallBindings()
         {
+            Container.BindInterfacesAndSelfTo<MainMenuView>().FromComponentsInHierarchy().AsSingle();
+            Container.BindInterfacesAndSelfTo<MainMenuPresenter>().AsSingle();
         }
     }
 }

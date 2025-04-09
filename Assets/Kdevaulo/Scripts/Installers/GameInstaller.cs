@@ -1,7 +1,7 @@
-﻿using Kdevaulo.Scripts.Service;
-using Kdevaulo.WordPuzzle.Core;
+﻿using Kdevaulo.WordPuzzle.Core;
 using Kdevaulo.WordPuzzle.Model;
 using Kdevaulo.WordPuzzle.Presenter;
+using Kdevaulo.WordPuzzle.Service;
 using Kdevaulo.WordPuzzle.View;
 using Kdevaulo.WordPuzzle.View.Data;
 
@@ -34,7 +34,7 @@ namespace Kdevaulo.WordPuzzle.Installers
 
             Container.BindInterfacesAndSelfTo<ValidationView>().FromComponentInHierarchy().AsSingle();
             Container.BindInterfacesAndSelfTo<WordView>().FromComponentsInHierarchy().AsTransient();
-            Container.BindInterfacesAndSelfTo<MainView>().FromComponentInHierarchy().AsSingle();
+            Container.BindInterfacesAndSelfTo<MainGameView>().FromComponentInHierarchy().AsSingle();
 
             Container.BindInterfacesAndSelfTo<ValidationPresenter>().AsSingle();
             Container.BindInterfacesAndSelfTo<ClusterPresenter>().AsSingle();

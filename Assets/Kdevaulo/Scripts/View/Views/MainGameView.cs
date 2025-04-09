@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Kdevaulo.WordPuzzle.View
 {
-    [AddComponentMenu(nameof(MainView) + " in " + nameof(View))]
-    public class MainView : MonoBehaviour,
+    [AddComponentMenu(nameof(MainGameView) + " in " + nameof(View))]
+    public class MainGameView : MonoBehaviour,
         ICanvasParamsProvider
     {
         [field: SerializeField] public Transform ClustersParent { get; private set; }
