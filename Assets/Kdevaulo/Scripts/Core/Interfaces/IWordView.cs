@@ -6,6 +6,6 @@ namespace Kdevaulo.WordPuzzle.Core
     {
         public void SetCellState(int cellIndex, State state);
         public AnchorPreset GetAnchorPreset();
-        ITransform GetTransform();
+        public ITransform GetTransform();
     }
 }

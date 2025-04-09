@@ -6,9 +6,9 @@ namespace Kdevaulo.WordPuzzle.Core
 {
     public interface ISceneManager
     {
-        UniTask LoadSceneAsync(int sceneIndex, CancellationToken token);
-        UniTask UnloadSceneAsync(int sceneIndex, CancellationToken token);
-        void SetSceneActive(int sceneIndex);
-        int GetCurrentSceneIndex();
+        public UniTask LoadSceneAsync(int sceneIndex, CancellationToken token);
+        public UniTask UnloadSceneAsync(int sceneIndex, CancellationToken token);
+        public void SetSceneActive(int sceneIndex);
+        public int GetCurrentSceneIndex();
     }
 }

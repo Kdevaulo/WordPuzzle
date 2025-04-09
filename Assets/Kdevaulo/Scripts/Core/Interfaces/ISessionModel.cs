@@ -5,6 +5,6 @@ namespace Kdevaulo.WordPuzzle.Core
     public interface ISessionModel
     {
         public void SetLevel(Level level);
-        Level TryGetLevel();
+        public Level TryGetLevel();
     }
 }
