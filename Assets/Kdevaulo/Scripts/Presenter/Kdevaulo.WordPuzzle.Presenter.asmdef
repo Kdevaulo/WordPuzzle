@@ -4,15 +4,17 @@
     "references": [
         "GUID:86b36b805cac7084693a627ea9591676",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4"
+        "GUID:0d8beb7f090555447a6cf5ce9e54dbb4",
+        "GUID:8d3f86b4a3ad0ab40936f4cc860eff9a",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f"
     ],
-    "includePlatforms": [],
-    "excludePlatforms": [],
+    "includePlatforms": [ ],
+    "excludePlatforms": [ ],
     "allowUnsafeCode": false,
     "overrideReferences": false,
-    "precompiledReferences": [],
+    "precompiledReferences": [ ],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": [],
+    "defineConstraints": [ ],
+    "versionDefines": [ ],
     "noEngineReferences": false
 }

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Numerics;
 
-using Kdevaulo.WordPuzzle.Core;
-using Kdevaulo.WordPuzzle.Core.Data;
+using Kdevaulo.WordPuzzle.Model;
+
+using UnityEngine;
 
 namespace Kdevaulo.WordPuzzle.Presenter
 {
@@ -11,14 +11,14 @@ namespace Kdevaulo.WordPuzzle.Presenter
         public event Action<Cluster> ClusterWrongDrop;
         public event Action<Cluster> ClusterDragBegin;
 
-        public IWordPart CurrentItem => _draggingItem;
+        public ClusterView CurrentItem => _draggingItem;
         public Cluster DraggingCluster { get; private set; }
 
-        private IDraggingItem _draggingItem;
+        private ClusterView _draggingItem;
 
         private bool _droppedToCells;
 
-        public void AddItem(IDraggingItem item, Cluster cluster)
+        public void AddItem(ClusterView item, Cluster cluster)
         {
             _draggingItem = item;
             DraggingCluster = cluster;
@@ -37,7 +37,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
             _droppedToCells = false;
         }
 
-        public void HandleCorrectDrop(Vector2 position, AnchorPreset preset, ITransform transform)
+        public void HandleCorrectDrop(Vector2 position, Anchor preset, Transform transform)
         {
             if (CurrentItem != null)
             {

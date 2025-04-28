@@ -1,9 +1,7 @@
 {
     "name": "Kdevaulo.WordPuzzle.Model",
     "rootNamespace": "Kdevaulo.WordPuzzle.Model",
-    "references": [
-        "GUID:86b36b805cac7084693a627ea9591676"
-    ],
+    "references": [ ],
     "includePlatforms": [ ],
     "excludePlatforms": [ ],
     "allowUnsafeCode": false,

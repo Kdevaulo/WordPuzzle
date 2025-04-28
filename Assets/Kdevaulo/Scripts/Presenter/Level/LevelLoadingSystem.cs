@@ -2,46 +2,39 @@
 
 using Cysharp.Threading.Tasks;
 
-using Kdevaulo.WordPuzzle.Core.Data;
-
-using UnityEngine;
-
-using Zenject;
+using Kdevaulo.WordPuzzle.Model;
 
 namespace Kdevaulo.WordPuzzle.Presenter
 {
     public class LevelLoadingSystem
     {
-        private const string CurrentLevelKey = "CurrentLevelKey";
-
         private Level _loadedLevel;
         private LocalLevelLoader _levelLoader;
 
-        private int _levelsCount;
-        private int _currentLevel;
+        public int GetLevelsCount()
+        {
+            PrepareLevelLoader();
+            return _levelLoader.GetLevelsCount();
+        }
 
         public Level GetLoadedLevel()
         {
             return _loadedLevel;
         }
 
-        public async UniTask LoadNextLevelAsync(CancellationToken token)
+        public async UniTask LoadLevelAsync(int level, CancellationToken token)
         {
-            if (++_currentLevel > _levelsCount)
-            {
-                _currentLevel = 1;
-            }
+            PrepareLevelLoader();
 
+            _loadedLevel = await _levelLoader.TryLoadLevelAsync(level, token);
+        }
+
+        private void PrepareLevelLoader()
+        {
             if (_levelLoader == null)
             {
                 _levelLoader = new LocalLevelLoader();
-                _levelsCount = _levelLoader.GetLevelsCount();
-                _currentLevel = PlayerPrefs.GetInt(CurrentLevelKey, 0);
             }
-
-            PlayerPrefs.SetInt(CurrentLevelKey, _currentLevel);
-            PlayerPrefs.Save();
-            _loadedLevel = await _levelLoader.TryLoadLevelAsync(_currentLevel, token);
         }
     }
 }
