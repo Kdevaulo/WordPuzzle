@@ -13,7 +13,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
     public class GameController : IInitializable
     {
         [Inject]
-        private LevelLoaderService _levelLoader;
+        private LevelLoadingSystem _levelLoader;
         [Inject]
         private IClusterSpawner _clusterSpawner;
         [Inject]
@@ -29,7 +29,7 @@ namespace Kdevaulo.WordPuzzle.Presenter
 
         private async UniTask TryStartLevelAsync(CancellationToken token)
         {
-            await _levelLoader.TryLoadLevelAsync(1, token);
+            await _levelLoader.LoadNextLevelAsync(token);
 
             var loadedLevel = _levelLoader.GetLoadedLevel();
             Assert.IsNotNull(loadedLevel);

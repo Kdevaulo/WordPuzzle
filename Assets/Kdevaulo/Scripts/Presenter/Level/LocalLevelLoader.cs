@@ -2,16 +2,22 @@
 
 using Cysharp.Threading.Tasks;
 
-using Kdevaulo.WordPuzzle.Core;
 using Kdevaulo.WordPuzzle.Core.Data;
 
 using UnityEngine;
 
-namespace Kdevaulo.WordPuzzle.Installers
+namespace Kdevaulo.WordPuzzle.Presenter
 {
-    public class LocalLevelLoader : ILevelLoader
+    public class LocalLevelLoader
     {
-        async UniTask<Level> ILevelLoader.TryLoadLevelAsync(int levelId, CancellationToken token)
+        private const int LevelsCount = 4;
+        
+        public int GetLevelsCount()
+        {
+            return LevelsCount;
+        }
+        
+        public async UniTask<Level> TryLoadLevelAsync(int levelId, CancellationToken _)
         {
             var path = $"BuiltInLevels/Level{levelId}";
             var textAsset = Resources.Load<TextAsset>(path);

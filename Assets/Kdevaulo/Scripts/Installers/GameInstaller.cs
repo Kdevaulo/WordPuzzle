@@ -19,7 +19,7 @@ namespace Kdevaulo.WordPuzzle.Installers
 
         public override void InstallBindings()
         {
-            Container.Bind<LevelLoaderService>().AsSingle();
+            Container.Bind<LevelLoadingSystem>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<GameController>().AsSingle().NonLazy();
             Container.BindInterfacesAndSelfTo<ClusterSpawner>().AsSingle()
                 .WithArguments(_clustersData.Clusters, Container);
